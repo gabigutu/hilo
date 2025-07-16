@@ -1,20 +1,33 @@
 <main id="game">
   <h1 class="animate__animated animate__bounce">{{ gameTitle }}</h1>
+  <!-- Add no. straks -->
   <div id="stats">
     <div id="score">
       Score: <span class="{{ animationScore }}">{{ score }}</span>
     </div>
     <div id="time">
-      Left: <span>{{ timeLeft }}</span>
+      Left: <span class="{{ scoreClass }}">{{ humanTimeLeft }}</span>
     </div>
   </div>
 
   <section id="controls">
     <div>
-      <button (click)="guessHi()" title="Guess Higher or Equal">Hi</button>
+      <button
+        (click)="guessHi()"
+        title="Guess Higher or Equal"
+        [disabled]="isGameOver"
+      >
+        Hi
+      </button>
     </div>
     <div>
-      <button (click)="guessLo()" title="Guess Lower or Equal">Lo</button>
+      <button
+        (click)="guessLo()"
+        title="Guess Lower or Equal"
+        [disabled]="isGameOver"
+      >
+        Lo
+      </button>
     </div>
   </section>
 
