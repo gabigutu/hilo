@@ -1,0 +1,26 @@
+<main id="game">
+  <h1 class="animate__animated animate__bounce">{{ gameTitle }}</h1>
+  <div id="stats">
+    <div id="score">
+      Score: <span class="{{ animationScore }}">{{ score }}</span>
+    </div>
+    <div id="time">
+      Left: <span>{{ timeLeft }}</span>
+    </div>
+  </div>
+
+  <section id="controls">
+    <div>
+      <button (click)="guessHi()" title="Guess Higher or Equal">Hi</button>
+    </div>
+    <div>
+      <button (click)="guessLo()" title="Guess Lower or Equal">Lo</button>
+    </div>
+  </section>
+
+  <!-- carte -->
+  <img
+    class="{{ animationGuessClasses }}"
+    src="assets/images/cards/{{ cardSrc }}"
+  />
+</main>
