@@ -1,24 +1,29 @@
 import { Component } from '@angular/core';
+import { Winner } from '../helpers/winner';
+import { HighScoresComponent } from '../high-scores/high-scores.component';
 
 @Component({
   selector: 'app-game',
-  imports: [],
+  imports: [HighScoresComponent],
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.css']
 })
 export class GameComponent {
 
   // General Settings
-  gameTitle = 'Hi & Lo';
-  cardTypes = ['hearts', 'spades', 'clubs', 'diamonds'];
+  gameTitle: string = 'Hi & Lo';
+  cardTypes: string[] = ['hearts', 'spades', 'clubs', 'diamonds'];
+  deck: number[][] = []; // [[2, 0], [2, 1], [2, 2], ..., [5, 0], [5, 1]] // 6 * 52 = 312
 
   // Game Status
   isGameOver = false;
 
+  winners: Winner[] = [];
+
   // Game Data
-  cardNumber = 0;
-  cardTypeNo = -1;
-  lastCardNumber = -1;
+  cardNumber: number = 0;
+  cardTypeNo: number = -1;
+  lastCardNumber: number = -1;
   score: number = 0;
   timeLeft = 0;
   timeLeftInterval: any = null;
@@ -38,8 +43,23 @@ export class GameComponent {
     this.loadGame();
   }
 
+  fillDeck(noDecks = 1) { // fill one deck
+    let deck = [];
+    for (let k = 1; k <= noDecks; k++) {
+      for (let i = 2; i <= 14; i++) {
+        for (let j = 0; j < 4; j++) {
+          let card = [i, j];
+          deck.push(card);
+        }
+      }
+    }
+    return deck;
+  }
+
   newGame() {
     this.isGameOver = false;
+    this.deck = this.fillDeck(6);
+    console.log(this.deck);
     this.score = 0;
     this.noStrakes = 0;
     this.timeLeft = 2 * 60 * 1000; // 2 minutes
@@ -49,12 +69,19 @@ export class GameComponent {
   }
 
   generateCard() {
+    // get a random card from this.deck
     this.lastCardNumber = this.cardNumber;
-    // [0; 1) * 13 + 2 => [2; 15)
-    this.cardNumber = Math.floor(Math.random() * 13 + 2);
-    // [0; 1) => [0; 4)
-    this.cardTypeNo = Math.floor(Math.random() * 4);
+
+    let index = Math.floor(Math.random() * this.deck.length); // [0; 1) => [0; deck_length)
+    this.cardNumber = this.deck[index][0]; // [8, 2] // [12, 1]
+    this.cardTypeNo = this.deck[index][1];
     console.log(this.cardTypes[this.cardTypeNo]);
+
+    // remove card from deck
+    // remove element from pos index from this.deck array
+    this.deck.splice(index, 1);
+    console.log('index = ' + index);
+    console.log(this.deck);
   }
 
   drawCard() {
@@ -159,7 +186,11 @@ export class GameComponent {
     this.saveGame();
     this.cardSrc = 'red_joker.svg';
     this.scoreClass = 'guessed-wrong';
-    let response = confirm('Game Over! Start a new game?');
+    this.confirmNewGame('Game Over! Start a new game?');
+  }
+
+  confirmNewGame(message: string) {
+    let response = confirm(message);
     if (response == true) {
       this.newGame();
     }

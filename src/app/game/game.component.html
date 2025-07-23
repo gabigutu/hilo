@@ -1,39 +1,52 @@
-<main id="game">
-  <h1 class="animate__animated animate__bounce">{{ gameTitle }}</h1>
-  <!-- Add no. straks -->
-  <div id="stats">
-    <div id="score">
-      Score: <span class="{{ animationScore }}">{{ score }}</span>
-    </div>
-    <div id="time">
-      Left: <span class="{{ scoreClass }}">{{ humanTimeLeft }}</span>
-    </div>
-  </div>
-
-  <section id="controls">
-    <div>
+<div id="screen">
+  <main id="game">
+    <div class="menu">
       <button
-        (click)="guessHi()"
-        title="Guess Higher or Equal"
-        [disabled]="isGameOver"
+        (click)="confirmNewGame('Are you sure you want to start a mew game?')"
       >
-        Hi
+        New Game
       </button>
     </div>
-    <div>
-      <button
-        (click)="guessLo()"
-        title="Guess Lower or Equal"
-        [disabled]="isGameOver"
-      >
-        Lo
-      </button>
-    </div>
-  </section>
 
-  <!-- carte -->
-  <img
-    class="{{ animationGuessClasses }}"
-    src="assets/images/cards/{{ cardSrc }}"
-  />
-</main>
+    <h1 class="animate__animated animate__bounce">{{ gameTitle }}</h1>
+    <!-- Add no. straks -->
+    <div id="stats">
+      <div id="score">
+        Score: <span class="{{ animationScore }}">{{ score }}</span>
+      </div>
+      <div id="time">
+        Left: <span class="{{ scoreClass }}">{{ humanTimeLeft }}</span>
+      </div>
+    </div>
+
+    <section id="controls">
+      <div>
+        <button
+          (click)="guessHi()"
+          title="Guess Higher or Equal"
+          [disabled]="isGameOver"
+        >
+          Hi
+        </button>
+      </div>
+      <div>
+        <button
+          (click)="guessLo()"
+          title="Guess Lower or Equal"
+          [disabled]="isGameOver"
+        >
+          Lo
+        </button>
+      </div>
+    </section>
+
+    <!-- carte -->
+    <img
+      class="{{ animationGuessClasses }}"
+      src="assets/images/cards/{{ cardSrc }}"
+    />
+  </main>
+  <aside id="aside">
+    <app-high-scores></app-high-scores>
+  </aside>
+</div>

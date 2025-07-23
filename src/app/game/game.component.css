@@ -1,9 +1,18 @@
-#game {
-    width: 300px;
-    background-color: bisque;
+#screen {
+    display: flex;
     margin: 0 auto;
+    width: 640px;
+}
+
+#game {
+    flex: 1;
+    background-color: bisque;
     text-align: center;
     padding: 10px 30px;
+}
+
+#aside {
+    flex: 1;
 }
 
 #game h1 {
