@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { Winner } from '../helpers/winner';
 
 @Component({
   selector: 'app-high-scores',
@@ -7,5 +8,8 @@ import { Component } from '@angular/core';
   styleUrl: './high-scores.component.css'
 })
 export class HighScoresComponent {
+
+  @Input()
+  winners: Winner[] = [];
 
 }

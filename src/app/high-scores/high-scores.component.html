@@ -1,5 +1,5 @@
 <div id="high">
-  <h1>High Scores</h1>
+  <h1>High Scores ({{ winners.length }})</h1>
   <table>
     <thead>
       <tr>
@@ -7,6 +7,13 @@
         <th>Score</th>
       </tr>
     </thead>
-    <tbody></tbody>
+    <tbody>
+      @for (winner of winners; track winner.name) {
+      <tr>
+        <td>{{ winner.name }}</td>
+        <td>{{ winner.score }}</td>
+      </tr>
+      }
+    </tbody>
   </table>
 </div>

@@ -41,6 +41,7 @@ export class GameComponent {
   ngOnInit() {
     // this.newGame();
     this.loadGame();
+    this.loadWinners();
   }
 
   fillDeck(noDecks = 1) { // fill one deck
@@ -94,6 +95,7 @@ export class GameComponent {
     localStorage.setItem('cardNumber', this.cardNumber.toString());
     localStorage.setItem('cardTypeNo', this.cardTypeNo.toString());
     localStorage.setItem('noStrakes', this.noStrakes.toString());
+    localStorage.setItem('deck', JSON.stringify(this.deck));
   }
 
   loadGame() {
@@ -102,8 +104,35 @@ export class GameComponent {
     this.cardNumber = Number(localStorage.getItem('cardNumber'));
     this.cardTypeNo = Number(localStorage.getItem('cardTypeNo'));
     this.noStrakes = Number(localStorage.getItem('noStrakes'));
+    let tmpDeck = localStorage.getItem('deck');
+    if (tmpDeck == null) {
+      this.deck = [];
+    } else {
+      this.deck = JSON.parse(tmpDeck);
+    }
     this.drawCard();
     this.passTime();
+  }
+
+  loadWinners() {
+    // load string value from "winners" key in local storage
+
+    let winnersAsJson = localStorage.getItem('winners');
+    if (winnersAsJson == null) {
+      winnersAsJson = '';
+    }
+    // convert json string to object (array)
+    const winnersLS = JSON.parse(winnersAsJson);
+
+    // set winners in component
+    this.winners = winnersLS;
+  }
+
+  saveWinners() {
+    // convert winners object (array) to json string
+    let winnersAsJson = JSON.stringify(this.winners);
+    // save this string to the "winners" key in local storage
+    localStorage.setItem('winners', winnersAsJson);
   }
 
   decreaseScore() {
@@ -119,7 +148,7 @@ export class GameComponent {
     this.score++;
     this.noStrakes++;
     if (this.noStrakes % 5 == 0) {
-      this.timeLeft += 10 * 1000;
+      this.timeLeft += 10 * 1000; // add 10 more seconds
     }
     this.animateCorrect();
 
@@ -186,7 +215,25 @@ export class GameComponent {
     this.saveGame();
     this.cardSrc = 'red_joker.svg';
     this.scoreClass = 'guessed-wrong';
+    // do you want to save score?
+    let name = prompt("Would you like to save score? Write your name:");
+    if (name != null) {
+      this.addWinner(name, this.score);
+      this.saveWinners();
+    }
     this.confirmNewGame('Game Over! Start a new game?');
+  }
+
+  addWinner(name: string, score: number) {
+    if (name.length == 0) return;
+    if (score <= 0) return;
+
+    // add new Winner to winners array
+    let winner: Winner = {} as Winner;
+    winner.name = name;
+    winner.score = score;
+
+    this.winners.push(winner);
   }
 
   confirmNewGame(message: string) {
@@ -210,13 +257,13 @@ export class GameComponent {
 
   computeHumanTimeLeft() {
     let seconds = this.timeLeft / 1000;
-    console.log(`seconds: ${seconds}`);
+    // console.log(`seconds: ${seconds}`);
     let minutes = Math.floor(seconds / 60);
-    console.log(`minutes: ${minutes}`);
+    // console.log(`minutes: ${minutes}`);
 
     let secondsInMinutes = minutes * 60;
     let diffSeconds = seconds - secondsInMinutes;
-    console.log(`dif seconds: ${diffSeconds}`);
+    // console.log(`dif seconds: ${diffSeconds}`);
 
     this.humanTimeLeft = `${minutes > 0 ? minutes + ' min, ' : ''}${diffSeconds} sec`;
   }
